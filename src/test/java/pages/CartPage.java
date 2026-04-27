@@ -43,6 +43,4 @@ public class CartPage extends BasePage {
         String id = "remove-" + itemName.toLowerCase().replace(" ", "-");
         return !driver.findElements(By.id(id)).isEmpty();
     }
-
-
 }
