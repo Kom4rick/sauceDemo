@@ -1,35 +1,36 @@
 package tests;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import tests.base.BaseTest;
 
 import static org.testng.Assert.assertEquals;
 
 public class LoginTest extends BaseTest {
-    @Test
+    @Test(description = "Проверка позитивного логина",
+            testName = "Позитивный логин",
+            groups = {"login"})
     public void checkLoginWithPositiveCred() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
         assertEquals(productsPage.getTitle(), "Products");
     }
 
-    @Test
-    public void checkLoginWithEmptyPass() {
-        loginPage.open();
-        loginPage.login("standard_user", "");
-        assertEquals(loginPage.getErrorMsg(), "Epic sadface: Password is required");
+    @DataProvider(name = "Тестовые данные для негативного логина")
+    public Object[][] loginData() {
+        return new Object[][]{
+                {"standard_user", "", "Epic sadface: Password is required"},
+                {"", "secret_sauce", "Epic sadface: Username is required"},
+                {"test", "test", "Epic sadface: Username and password do not match any user in this service"}
+        };
     }
 
-    @Test
-    public void checkLoginWithEmptyUserName() {
+    @Test(dataProvider = "Тестовые данные для негативного логина",
+            description = "Проверка негативного логина",
+            testName = "Негативный логин")
+    public void checkLoginWithNegativeCred(String user, String password, String errorMsg) {
         loginPage.open();
-        loginPage.login("", "secret_sauce");
-        assertEquals(loginPage.getErrorMsg(), "Epic sadface: Username is required");
-    }
-
-    @Test
-    public void checkLoginWithNegativeCred() {
-        loginPage.open();
-        loginPage.login("standard_user", "132");
-        assertEquals(loginPage.getErrorMsg(), "Epic sadface: Username and password do not match any user in this service");
+        loginPage.login(user, password);
+        assertEquals(loginPage.getErrorMsg(), errorMsg);
     }
 }
