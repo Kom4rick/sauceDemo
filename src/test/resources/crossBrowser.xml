@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="2"
+       name="Test suite"
+       parallel="classes">
+
+    <listeners>
+        <listener class-name="utils.TestListener"/>
+        <listener class-name="utils.AnnotationTransformer"/>
+    </listeners>
+    <test name="chrome">
+        <groups>
+            <run>
+                <include name="login"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="tests.LoginTest"/>
+            <parameter name="browser" value="chrome"/>
+        </classes>
+    </test>
+
+    <test name="edge">
+        <classes>
+            <class name="tests.CartTest"/>
+            <class name="tests.ProductTest"/>
+            <parameter name="browser" value="edge"/>
+        </classes>
+    </test>
+</suite>
+
